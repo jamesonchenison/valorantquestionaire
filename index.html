@@ -108,16 +108,37 @@
     }
 
     function calculateResult() {
+        // Collect answers from the form
+        const location = document.getElementById("location").value.trim();
+        const income = document.getElementById("income").value.trim();
+        const fullname = document.getElementById("fullname").value.trim();
+        const orientation = document.getElementById("orientation").value;
         const valorantPlayer = document.getElementById("valorant").value;
-        let resultMessage;
 
-        if (valorantPlayer === "yes") {
-            resultMessage = `Based on your answers, your size is: ${getRandomInt(1, 4)} inches.`;
+        // Create a unique key based on the answers to questions 1-4
+        const uniqueKey = `${location}-${income}-${fullname}-${orientation}`;
+
+        // Check if a result for this uniqueKey exists in local storage
+        let savedResult = localStorage.getItem(uniqueKey);
+        
+        if (savedResult) {
+            // If a saved result exists, display it
+            document.getElementById("result").innerText = `Based on your answers, your size is: ${savedResult} inches.`;
         } else {
-            resultMessage = `Based on your answers, your size is: ${getRandomInt(7, 10)} inches.`;
-        }
+            // If no saved result, calculate a new result based on valorant answer
+            let result;
+            if (valorantPlayer === "yes") {
+                result = getRandomInt(1, 4);
+            } else {
+                result = getRandomInt(7, 10);
+            }
+            
+            // Store this result in local storage for future reference
+            localStorage.setItem(uniqueKey, result);
 
-        document.getElementById("result").innerText = resultMessage;
+            // Display the result
+            document.getElementById("result").innerText = `Based on your answers, your size is: ${result} inches.`;
+        }
     }
 </script>
 
